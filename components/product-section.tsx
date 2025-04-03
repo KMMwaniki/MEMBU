@@ -1,8 +1,7 @@
 "use client"
-import { Button } from "../components/ui/button"
-import { useToast } from "../components/ui/use-toast"
-import { useCartStore } from "../lib/store"
-import React from "react"
+import { Button } from "@/components/ui/button"
+import { useToast } from "@/components/ui/use-toast"
+import { useCartStore } from "@/lib/store"
 
 // Product data
 const products = [
@@ -58,11 +57,10 @@ export default function ProductSection() {
 
   const handleAddToCart = (product: any) => {
     addToCart({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        quantity: 1,
-        size: undefined
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      quantity: 1,
     })
 
     toast({
@@ -123,4 +121,5 @@ export default function ProductSection() {
     </section>
   )
 }
+
 

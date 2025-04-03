@@ -1,15 +1,25 @@
 "use client"
 
-import React from "react"
+import type React from "react"
+import { useState, useEffect } from "react"
+import { ShoppingBag, X, Trash2 } from "lucide-react"
+import { useCartStore } from "@/lib/store"
 
-import { useState } from "react"
-import { ShoppingBag, X } from "lucide-react"
-import { Button } from "../components/ui/button"
-import { useCartStore } from "../lib/store"
+interface CartProviderProps {
+  children: React.ReactNode
+}
 
-export default function CartProvider({ children }: { children: React.ReactNode }) {
+export default function CartProvider({ children }: CartProviderProps) {
   const [isCartOpen, setIsCartOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  // Get cart items from the store
   const { items, removeItem, updateQuantity, clearCart } = useCartStore()
+
+  // Fix hydration issues by only rendering client-side content after mount
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const totalAmount = items.reduce((total, item) => {
     return total + item.price * item.quantity
@@ -43,54 +53,52 @@ export default function CartProvider({ children }: { children: React.ReactNode }
     setIsCartOpen(false)
   }
 
+  // Don't render cart content until after client-side hydration
+  if (!mounted) {
+    return <>{children}</>
+  }
+
   return (
     <>
       {children}
 
-      <button
-        className="fixed top-4 right-4 z-50 bg-white text-[#6b2c1e] p-3 rounded-full shadow-lg flex items-center justify-center"
-        onClick={() => setIsCartOpen(true)}
-      >
+      <button className="cart-button" onClick={() => setIsCartOpen(true)} aria-label="Open cart">
         <ShoppingBag className="w-6 h-6" />
-        {items.length > 0 && (
-          <span className="absolute -top-2 -right-2 bg-[#b27566] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">
-            {items.length}
-          </span>
-        )}
+        {items.length > 0 && <span className="cart-count animate-bounce">{items.length}</span>}
       </button>
 
       {isCartOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-end">
-          <div className="bg-white w-full max-w-md h-full overflow-y-auto">
-            <div className="p-4 border-b flex justify-between items-center">
-              <h2 className="text-xl font-bold text-[#6b2c1e]">Your Cart</h2>
-              <button onClick={() => setIsCartOpen(false)} className="text-gray-500 hover:text-[#6b2c1e]">
+        <div className="fixed inset-0 bg-black bg-opacity-70 z-50 flex justify-end">
+          <div className="cart-sidebar open">
+            <div className="cart-header">
+              <h2 className="cart-title">Your Cart</h2>
+              <button onClick={() => setIsCartOpen(false)} className="cart-close" aria-label="Close cart">
                 <X className="w-6 h-6" />
               </button>
             </div>
 
             {items.length === 0 ? (
-              <div className="p-8 text-center">
-                <p className="text-gray-500 mb-4">Your cart is empty</p>
-                <Button onClick={() => setIsCartOpen(false)} className="bg-[#b27566] hover:bg-[#6b2c1e] text-white">
+              <div className="cart-empty">
+                <p className="cart-empty-message">Your cart is empty</p>
+                <button onClick={() => setIsCartOpen(false)} className="btn btn-primary">
                   Continue Shopping
-                </Button>
+                </button>
               </div>
             ) : (
               <>
-                <div className="p-4 space-y-4">
+                <div className="cart-items">
                   {items.map((item) => (
-                    <div key={item.id} className="flex justify-between items-center border-b pb-4">
-                      <div>
-                        <h3 className="font-medium">{item.name}</h3>
-                        <p className="text-gray-500">KSh {item.price}</p>
+                    <div key={item.id} className="cart-item">
+                      <div className="cart-item-info">
+                        <h3 className="cart-item-name">{item.name}</h3>
+                        <p className="cart-item-price">KSh {item.price}</p>
                       </div>
 
-                      <div className="flex items-center">
+                      <div className="cart-item-quantity">
                         <select
                           value={item.quantity}
                           onChange={(e) => updateQuantity(item.id, Number.parseInt(e.target.value))}
-                          className="mx-2 border rounded p-1"
+                          aria-label="Quantity"
                         >
                           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
                             <option key={num} value={num}>
@@ -98,24 +106,31 @@ export default function CartProvider({ children }: { children: React.ReactNode }
                             </option>
                           ))}
                         </select>
-
-                        <button onClick={() => removeItem(item.id)} className="text-gray-400 hover:text-red-500">
-                          <X className="w-5 h-5" />
-                        </button>
                       </div>
+
+                      <button onClick={() => removeItem(item.id)} className="cart-item-remove" aria-label="Remove item">
+                        <X className="w-5 h-5" />
+                      </button>
                     </div>
                   ))}
                 </div>
 
-                <div className="p-4 border-t">
-                  <div className="flex justify-between mb-4">
-                    <span className="font-medium">Total</span>
-                    <span className="font-bold">KSh {totalAmount}</span>
+                <div className="cart-footer">
+                  <div className="cart-total">
+                    <span className="cart-total-label">Total</span>
+                    <span className="cart-total-amount">KSh {totalAmount}</span>
                   </div>
 
-                  <Button onClick={handleCheckout} className="w-full bg-[#b27566] hover:bg-[#6b2c1e] text-white py-2">
-                    Checkout
-                  </Button>
+                  <div className="cart-actions">
+                    <button onClick={clearCart} className="cart-clear" aria-label="Clear cart">
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Clear Cart
+                    </button>
+
+                    <button onClick={handleCheckout} className="cart-checkout" aria-label="Complete order">
+                      Complete Order
+                    </button>
+                  </div>
                 </div>
               </>
             )}

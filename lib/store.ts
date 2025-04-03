@@ -2,7 +2,6 @@ import { create } from "zustand"
 import { persist } from "zustand/middleware"
 
 export interface CartItem {
-  size: any
   id: number
   name: string
   price: number
@@ -56,4 +55,6 @@ export const useCartStore = create<CartState>()(
     },
   ),
 )
+
+
 

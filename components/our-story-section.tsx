@@ -1,15 +1,20 @@
-import React from "react";
-
 export default function OurStorySection() {
     return (
-      <section className="w-full bg-[#b27566] text-white">
-        <div className="container mx-auto px-4 py-20">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+      <section className="w-full bg-ivory py-32">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-2 gap-20 items-center">
             <div>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif mb-8">Our Story</h2>
+              <h2 className="text-5xl md:text-6xl lg:text-7xl font-serif text-chocolate mb-6">Our Story</h2>
+  
+              {/* Elegant divider */}
+              <div className="elegant-divider text-chocolate"></div>
+  
+              <p className="text-mocha text-lg mt-8 font-light">
+                A journey of love, tradition, and the belief that nature knows best.
+              </p>
             </div>
   
-            <div className="space-y-4 text-sm md:text-base">
+            <div className="space-y-8 text-sm md:text-base text-chocolate font-light">
               <p>
                 Membu is a journey of love, tradition, and the belief that nature knows best. It all started with a deep
                 connection to the land the lands of Meru and Embu, where my parents come from. These regions, with their
@@ -38,16 +43,15 @@ export default function OurStorySection() {
                 nature, and we hope that through our products, you can experience the same harmony and connection with the
                 earth that we cherish so much.
               </p>
-  
-              <p>
-                This brand is a reflection of who we are, a tribute to our heritage, a celebration of natural beauty, and
-                a reminder that sometimes, the best things in life come from the earth itself.
-              </p>
             </div>
           </div>
         </div>
       </section>
     )
   }
+  
+  
+  
+  
   
   

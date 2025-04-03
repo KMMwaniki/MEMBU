@@ -1,46 +1,59 @@
 import Image from "next/image"
-import React from "react"
 
 // Coming soon products
 const comingSoonProducts = [
   {
     id: 1,
     name: "Scalp Renewal Cleanse",
-    price: "N/A",
+    price: "Coming Soon",
+    image: "/images/MEMBU2.jpg",
   },
   {
     id: 2,
     name: "Scalp Therapy Conditioner",
-    price: "N/A",
+    price: "Coming Soon",
+    image: "/images/MEMBU2.jpg",
   },
   {
     id: 3,
     name: "Scalp Shield Leave-In",
-    price: "N/A",
+    price: "Coming Soon",
+    image: "/images/MEMBU2.jpg",
   },
 ]
 
 export default function ComingSoonSection() {
   return (
-    <section className="w-full bg-[#f9f1ef] py-16">
+    <section className="w-full bg-ivory py-32">
       <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row justify-between items-baseline mb-12">
-          <h2 className="text-4xl md:text-5xl font-serif text-[#b27566]">Coming Soon</h2>
-          <h3 className="text-2xl md:text-3xl font-serif text-[#b27566] mt-4 md:mt-0">
+        <div className="flex flex-col md:flex-row justify-between items-baseline mb-20">
+          <div>
+            <h2 className="section-title text-4xl md:text-5xl lg:text-6xl mb-4">Coming Soon</h2>
+            <div className="elegant-divider text-chocolate"></div>
+          </div>
+          <h3 className="text-2xl md:text-3xl font-serif text-mocha mt-8 md:mt-0 italic">
             Scalp So Fresh, It'll Freeze Your Dandruff
           </h3>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-3 gap-12">
           {comingSoonProducts.map((product) => (
-            <div key={product.id} className="relative">
+            <div key={product.id} className="product-card group">
               <div className="relative aspect-square overflow-hidden">
-                <Image src="/images/k4.png" alt={product.name} fill style={{ objectFit: "cover" }} />
+                {/* Product image */}
+                <Image
+                  src={product.image || "/placeholder.svg"}
+                  alt={product.name}
+                  fill
+                  style={{ objectFit: "cover" }}
+                  className="product-image"
+                />
 
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center p-4">
-                  <h3 className="text-2xl md:text-3xl font-serif mb-1">{product.name}</h3>
-                  <p className="text-lg mt-4">{product.price}</p>
-                  <div className="absolute top-0 left-0 bg-red-500 text-white px-4 py-1 m-4">COMING SOON!</div>
+                <div className="product-overlay">
+                  <h3 className="product-name">{product.name}</h3>
+                  <div className="absolute top-4 left-4 bg-chocolate text-white px-4 py-1 rounded-md font-medium tracking-wider text-sm">
+                    COMING SOON!
+                  </div>
                 </div>
               </div>
             </div>
